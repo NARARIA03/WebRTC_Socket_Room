@@ -112,10 +112,18 @@ function HomePage({ id }: Props) {
           </>
         ) : (
           roomInfo.map((room) => (
-            <>
+            <button
+              onClick={() => {
+                navigate("/room", {
+                  state: {
+                    roomName: room.roomName,
+                  },
+                });
+              }}
+            >
               <p>{room.roomName}</p>
               <p>{room.count}</p>
-            </>
+            </button>
           ))
         )}
         <button
