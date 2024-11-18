@@ -1,26 +1,33 @@
+import { Devices, Peer, Stream } from "@@types/rtcTypes";
 import { useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 /**
  * @description 소켓 연결, 연결 해제와 RTC 연결 이벤트를 처리하는 커스텀 훅
  */
-export const useSocket = (roomName: string) => {
-  const [remoteStreams, setRemoteStreams] = useState<
-    { peerId: string; stream: MediaStream }[]
-  >([]);
+export const useSocket = (
+  roomName: string,
+  selectedVideo: MediaDeviceInfo | null,
+  selectedAudio: MediaDeviceInfo | null,
+  isDeviceOff: Devices
+) => {
+  const [remoteStreams, setRemoteStreams] = useState<Stream[]>([]);
 
   const socketRef = useRef<Socket | null>(null);
   const userVideoRef = useRef<HTMLVideoElement>(null);
-  const peersRef = useRef<{ peerId: string; peer: RTCPeerConnection }[]>([]);
+  const myStreamRef = useRef<MediaStream | null>(null);
+  const peersRef = useRef<Peer[]>([]);
 
   // 소켓 연결 이후 -> 제일 먼저 userMedia를 받아와서 ref에 집어넣고,
   // RTC 연결 과정을 순차적으로 실행하는 함수
-  const getUserMedia = async () => {
+  const RTCConnection = async () => {
     if (socketRef.current) {
+      console.log(selectedAudio, selectedVideo);
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
+      myStreamRef.current = stream;
       if (userVideoRef.current) userVideoRef.current.srcObject = stream;
 
       // 방 연결 이벤트를 서버로 발사
@@ -240,13 +247,69 @@ export const useSocket = (roomName: string) => {
 
   useEffect(() => {
     socketRef.current = io(import.meta.env.VITE_API_URL);
-    getUserMedia();
+    RTCConnection();
 
     return () => {
       if (socketRef.current) socketRef.current.disconnect();
       socketRef.current = null;
     };
   }, []);
+
+  // 디바이스 state 변경 시 RTC와 video에 반영하는 effect
+  useEffect(() => {
+    const changeDeviceState = async () => {
+      if (!selectedVideo && !selectedAudio) return;
+
+      try {
+        const newStream = await navigator.mediaDevices.getUserMedia({
+          video: selectedVideo
+            ? { deviceId: { exact: selectedVideo.deviceId } }
+            : true,
+          audio: selectedAudio
+            ? { deviceId: { exact: selectedAudio.deviceId } }
+            : true,
+        });
+
+        myStreamRef.current = newStream;
+        if (userVideoRef.current) {
+          userVideoRef.current.srcObject = newStream;
+        }
+
+        // 모든 연결된 피어에 대해 변경된 스트림에 대해
+        // kind가 일치하는 걸 찾아서 replaceTrack 한다는 개념..!
+        peersRef.current.forEach((peer) => {
+          newStream.getTracks().forEach((newTrack) => {
+            const sender = peer.peer
+              .getSenders()
+              .find((s) => s.track?.kind === newTrack.kind);
+            if (sender) {
+              sender.replaceTrack(newTrack);
+            }
+          });
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    changeDeviceState();
+  }, [selectedVideo, selectedAudio]);
+
+  useEffect(() => {
+    if (myStreamRef.current) {
+      myStreamRef.current
+        .getVideoTracks()
+        .forEach((videoTrack) => (videoTrack.enabled = !videoTrack.enabled));
+    }
+  }, [isDeviceOff.video]);
+
+  useEffect(() => {
+    if (myStreamRef.current) {
+      myStreamRef.current
+        .getAudioTracks()
+        .forEach((audioTrack) => (audioTrack.enabled = !audioTrack.enabled));
+    }
+  }, [isDeviceOff.audio]);
 
   return { remoteStreams, userVideoRef };
 };
