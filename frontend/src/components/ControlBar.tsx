@@ -31,15 +31,15 @@ function ControlBar({
       <div className="flex items-center gap-4">
         <button
           className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-slate-200"
-          onClick={toggleAudio}
-        >
-          {isDeviceOff.audio ? <FaMicrophoneSlash /> : <FaMicrophone />}
-        </button>
-        <button
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-slate-200"
           onClick={toggleVideo}
         >
           {isDeviceOff.video ? <FaVideoSlash /> : <FaVideo />}
+        </button>
+        <button
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-slate-200"
+          onClick={toggleAudio}
+        >
+          {isDeviceOff.audio ? <FaMicrophoneSlash /> : <FaMicrophone />}
         </button>
       </div>
 
