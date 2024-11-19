@@ -16,4 +16,5 @@ export type Devices = {
 export type Chat = {
   id: string;
   text: string;
+  time: string;
 };

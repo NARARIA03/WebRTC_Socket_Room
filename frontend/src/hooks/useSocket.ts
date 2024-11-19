@@ -19,10 +19,11 @@ export const useSocket = (
   const myStreamRef = useRef<MediaStream | null>(null);
   const peersRef = useRef<Peer[]>([]);
 
-  const submitChat = (input: string) => {
+  const submitChat = (text: string) => {
     if (socketRef.current) {
       const id = socketRef.current.id as string;
-      socketRef.current.emit("send-chat", { id, text: input }, roomName);
+      const time = new Date().toISOString();
+      socketRef.current.emit("send-chat", { id, text, time }, roomName);
     }
   };
 
