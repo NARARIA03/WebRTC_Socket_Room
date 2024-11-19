@@ -32,11 +32,11 @@ function ChatBox({ chats, submitChat }: Props) {
         <h2 className="text-lg font-semibold text-slate-200">채팅</h2>
       </div>
       <div className="flex h-[320px] flex-col overflow-y-scroll">
-        {chats.map(({ id, text, time }) => (
+        {chats.map(({ userId, text, time }) => (
           <div className="p-3 space-y-4" ref={scrollRef}>
             <div className="items-start ml-3">
               <p className="text-sm text-slate-200">
-                <span className="text-slate-200">{id}</span> : {text}
+                <span className="text-slate-200">{userId}</span> : {text}
               </p>
               <p className="text-xs text-slate-400">
                 {format(new Date(time), "yy-MM-dd a h:mm", { locale: ko })}

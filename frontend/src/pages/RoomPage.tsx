@@ -11,7 +11,11 @@ import ChatBox from "@components/ChatBox";
 import { useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-function RoomPage() {
+interface Props {
+  id: string;
+}
+
+function RoomPage({ id }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { roomName }: { roomName: string } = location.state;
@@ -27,6 +31,7 @@ function RoomPage() {
 
   const { chats, submitChat, remoteStreams, userVideoRef } = useSocket(
     roomName,
+    id,
     selectedVideo,
     selectedAudio,
     isDeviceOff
@@ -54,19 +59,22 @@ function RoomPage() {
               playsInline
               className="w-full h-auto max-h-[300px] rounded-lg shadow-md object-cover"
             />
+            <p className="text-center text-sm mt-2 text-gray-400 truncate">
+              ID: {id} (나)
+            </p>
           </div>
         </div>
 
         <div className="bg-gray-800 rounded-lg shadow-md p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {remoteStreams.map(({ peerId, stream }) => (
+            {remoteStreams.map(({ peerId, userId, stream }) => (
               <div
                 key={peerId}
                 className="bg-gray-700 rounded-lg p-2 shadow-md"
               >
                 <Video stream={stream} />
                 <p className="text-center text-sm mt-2 text-gray-400 truncate">
-                  Peer ID: {peerId}
+                  ID: {userId}
                 </p>
               </div>
             ))}
