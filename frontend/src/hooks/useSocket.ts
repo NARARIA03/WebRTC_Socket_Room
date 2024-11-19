@@ -1,4 +1,4 @@
-import { Devices, Peer, Stream } from "@@types/rtcTypes";
+import { Chat, Devices, Peer, Stream } from "@@types/rtcTypes";
 import { useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
@@ -12,11 +12,19 @@ export const useSocket = (
   isDeviceOff: Devices
 ) => {
   const [remoteStreams, setRemoteStreams] = useState<Stream[]>([]);
+  const [chats, setChats] = useState<Chat[]>([]);
 
   const socketRef = useRef<Socket | null>(null);
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const myStreamRef = useRef<MediaStream | null>(null);
   const peersRef = useRef<Peer[]>([]);
+
+  const submitChat = (input: string) => {
+    if (socketRef.current) {
+      const id = socketRef.current.id as string;
+      socketRef.current.emit("send-chat", { id, text: input }, roomName);
+    }
+  };
 
   // 소켓 연결 이후 -> 제일 먼저 userMedia를 받아와서 ref에 집어넣고,
   // RTC 연결 과정을 순차적으로 실행하는 함수
@@ -32,6 +40,8 @@ export const useSocket = (
 
       // 방 연결 이벤트를 서버로 발사
       socketRef.current.emit("join-room", roomName);
+
+      socketRef.current.on("recv-chat", (chat: Chat[]) => setChats(chat));
 
       // 방에 잘 들어갔으면, 방에 있는 다른 유저들 socket.id 받아옴
       socketRef.current.on("all-users", (otherUsers: string[]) => {
@@ -311,5 +321,5 @@ export const useSocket = (
     }
   }, [isDeviceOff.audio]);
 
-  return { remoteStreams, userVideoRef };
+  return { chats, submitChat, remoteStreams, userVideoRef };
 };

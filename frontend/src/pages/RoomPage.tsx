@@ -23,7 +23,7 @@ function RoomPage() {
     toggleAudio,
   } = useDevices();
 
-  const { remoteStreams, userVideoRef } = useSocket(
+  const { chats, submitChat, remoteStreams, userVideoRef } = useSocket(
     roomName,
     selectedVideo,
     selectedAudio,
@@ -38,7 +38,7 @@ function RoomPage() {
         </h1>
       </div>
 
-      <div className="flex-1 h-96 grid grid-cols-1 lg:grid-cols-3 gap-4 p-4">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 p-4">
         <div className="flex justify-center items-center bg-gray-800 rounded-lg p-4 shadow-md">
           <div className="bg-gray-700 rounded-lg p-2 shadow-md">
             <video
@@ -51,7 +51,6 @@ function RoomPage() {
           </div>
         </div>
 
-        {/* 원격 캠 */}
         <div className="bg-gray-800 rounded-lg shadow-md p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {remoteStreams.map(({ peerId, stream }) => (
@@ -69,20 +68,20 @@ function RoomPage() {
         </div>
 
         <div className="bg-gray-800 rounded-lg shadow-md p-4 flex justify-center items-center">
-          <ChatBox />
+          <ChatBox chats={chats} submitChat={submitChat} />
         </div>
       </div>
 
       <div className="w-full p-4 bg-gray-700 shadow-md flex items-center flex-wrap justify-between gap-4">
         <div className="flex items-center gap-4">
           <button
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-white"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-slate-200"
             onClick={toggleAudio}
           >
             {isDeviceOff.audio ? <FaMicrophoneSlash /> : <FaMicrophone />}
           </button>
           <button
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-white"
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-600 hover:bg-gray-500 transition-all text-slate-200"
             onClick={toggleVideo}
           >
             {isDeviceOff.video ? <FaVideoSlash /> : <FaVideo />}
@@ -99,7 +98,7 @@ function RoomPage() {
               name="video"
               value={selectedVideo ? selectedVideo.deviceId : ""}
               onChange={handleSelectDevices}
-              className="w-full p-2 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded-lg bg-gray-800 text-slate-200 appearance-none focus:outline-none focus:ring-2 focus:ring-gray-400"
             >
               {myDevices
                 .filter((device) => device.kind === "videoinput")
@@ -120,7 +119,7 @@ function RoomPage() {
               name="audio"
               value={selectedAudio ? selectedAudio.deviceId : ""}
               onChange={handleSelectDevices}
-              className="w-full p-2 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded-lg bg-gray-800 text-slate-200 appearance-none focus:outline-none focus:ring-2 focus:ring-gray-400"
             >
               {myDevices
                 .filter((device) => device.kind === "audioinput")

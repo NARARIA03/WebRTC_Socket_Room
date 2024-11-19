@@ -12,3 +12,8 @@ export type Devices = {
   video: boolean;
   audio: boolean;
 };
+
+export type Chat = {
+  id: string;
+  text: string;
+};

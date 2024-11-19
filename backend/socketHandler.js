@@ -1,10 +1,24 @@
 module.exports = socketHandler = (io) => {
   // key: roomName, value: socket.id 집합 형태로 관리
   const rooms = new Map();
+  const chats = new Map();
 
   io.on("connection", (socket) => {
     console.log("새로운 사용자 연결:", socket.id);
     socket.data = { userId: socket.handshake.query.userId };
+
+    // 특정 유저가 특정 방에 채팅을 전송하면
+    // 이를 받아서 Map을 업데이트하고 chat 이벤트를 해당 방에 발사
+    socket.on("send-chat", (chat, roomName) => {
+      console.log(chats);
+      const updatedChat = chats.has(roomName)
+        ? [...chats.get(roomName), chat]
+        : [chat];
+
+      chats.set(roomName, updatedChat);
+      console.log(chats.get(roomName));
+      io.to(roomName).emit("recv-chat", chats.get(roomName));
+    });
 
     socket.on("join-room", (roomName) => {
       console.log(rooms);
@@ -23,6 +37,9 @@ module.exports = socketHandler = (io) => {
       }
       // 소켓 room 연결
       socket.join(roomName);
+      // 새로 들어온 유저에게 기존 채팅 내역 전달
+      socket.emit("recv-chat", chats.get(roomName) || []);
+
       // 본인 제외 같은 room의 socket.id목록을 all-users 이벤트로 새로 들어온 유저에게 쏴줌
       // [ 이후 흐름! ]
       // all-users 이벤트를 수신하면, 새로 들어온 유저는 기존 유저들에게 떡(offer)를 돌리기 시작
