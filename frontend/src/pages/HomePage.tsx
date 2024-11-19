@@ -57,6 +57,10 @@ function HomePage({ id }: Props) {
    */
   const handleSubmitRoomName = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!roomNameInput) {
+      alert("채팅방 이름을 입력해주세요");
+      return;
+    }
     navigate("/room", {
       state: {
         roomName: roomNameInput,
@@ -94,50 +98,71 @@ function HomePage({ id }: Props) {
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-tr from-slate-600 to-slate-500">
       <div className="bg-slate-200 min-w-96 px-24 py-16 rounded-xl shadow-xl flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-bold text-gray-700 mb-4">
+        <h1 className="text-4xl font-bold text-gray-700 mb-6">
           HomePage 입니다
         </h1>
         {roomInfo.length === 0 ? (
           <>
-            <p>방이 존재하지 않습니다. 만들어보세요!</p>
-            <form onSubmit={handleSubmitRoomName}>
+            <p className="text-gray-600 mb-1">채팅방이 존재하지 않습니다.</p>
+            <p className="text-gray-600 mb-3">
+              새로고침하거나, 새 채팅방을 만들어보세요!
+            </p>
+            <form
+              className="flex flex-col items-center gap-4"
+              onSubmit={handleSubmitRoomName}
+            >
               <input
+                className="px-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-slate-500 w-64"
                 type="text"
-                placeholder="새로운 방 이름을 입력해주세요"
+                placeholder="새로운 채팅방 이름을 입력해주세요"
                 value={roomNameInput}
                 onChange={(e) => setRoomNameInput(e.target.value)}
               />
-              <input type="submit" />
+              <input
+                className="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg transition-all cursor-pointer"
+                type="submit"
+                value="채팅방 만들기"
+              />
             </form>
           </>
         ) : (
-          roomInfo.map((room) => (
-            <button
-              onClick={() => {
-                navigate("/room", {
-                  state: {
-                    roomName: room.roomName,
-                  },
-                });
-              }}
-            >
-              <p>{room.roomName}</p>
-              <p>{room.count}</p>
-            </button>
-          ))
+          <div className="flex flex-col gap-4 w-full">
+            {roomInfo.map((room) => (
+              <button
+                key={room.roomName}
+                className="w-full px-6 py-4 bg-slate-100 hover:bg-slate-300 transition-all rounded-lg shadow-md flex justify-between items-center"
+                onClick={() => {
+                  navigate("/room", {
+                    state: {
+                      roomName: room.roomName,
+                    },
+                  });
+                }}
+              >
+                <div>
+                  <p className="text-lg font-semibold text-gray-700">
+                    {room.roomName}
+                  </p>
+                  <p className="text-sm text-gray-500">인원: {room.count}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         )}
-        <button
-          className="w-full block m-4 px-8 py-4 bg-slate-600 hover:bg-slate-500 text-slate-200 transition-all rounded-xl"
-          onClick={handleLogout}
-        >
-          로그아웃
-        </button>
-        <button
-          className="w-full block m-4 px-8 py-4 bg-slate-600 hover:bg-slate-500 text-slate-200 transition-all rounded-xl"
-          onClick={handleDeleteId}
-        >
-          회원탈퇴
-        </button>
+        <div className="flex gap-4 mt-8 w-full">
+          <button
+            className="flex-1 block px-8 py-4 bg-slate-600 hover:bg-slate-500 text-slate-200 transition-all rounded-xl text-center"
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
+          <button
+            className="flex-1 block px-8 py-4 bg-red-600 hover:bg-red-500 text-white transition-all rounded-xl text-center"
+            onClick={handleDeleteId}
+          >
+            회원탈퇴
+          </button>
+        </div>
       </div>
     </div>
   );
