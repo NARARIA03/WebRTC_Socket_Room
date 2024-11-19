@@ -110,7 +110,8 @@ function HomePage({ id }: Props) {
             roomInfo.map((room) => (
               <button
                 key={room.roomName}
-                className="w-full px-6 py-4 bg-slate-100 hover:bg-slate-300 transition-all rounded-lg shadow-md flex justify-between items-center"
+                className="w-full px-6 py-4 bg-slate-100 hover:bg-slate-300 disabled:bg-gray-400 transition-all rounded-lg shadow-md flex justify-between items-center"
+                disabled={room.count === 3}
                 onClick={() => {
                   navigate("/room", {
                     state: {
@@ -120,10 +121,13 @@ function HomePage({ id }: Props) {
                 }}
               >
                 <div>
-                  <p className="text-lg font-semibold text-gray-700">
+                  <p className="text-lg text-start font-semibold text-gray-700">
                     {room.roomName}
                   </p>
-                  <p className="text-sm text-gray-500">인원: {room.count}</p>
+                  <p className="text-sm text-gray-500">
+                    인원: {room.count} (
+                    {room.count === 3 ? "입장 불가" : "입장 가능"})
+                  </p>
                 </div>
               </button>
             ))
@@ -135,7 +139,7 @@ function HomePage({ id }: Props) {
           onSubmit={handleSubmitRoomName}
         >
           <input
-            className="px-4 py-2 rounded-lg shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-slate-500 w-64"
+            className="px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 w-64"
             type="text"
             placeholder="새로운 채팅방 이름을 입력해주세요"
             value={roomNameInput}

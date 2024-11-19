@@ -85,7 +85,7 @@ function LoginPage() {
             placeholder="ID를 입력해주세요."
             value={id}
             onChange={(e) => setId(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700"
+            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700 ring-2 ring-slate-200 focus:outline-none focus:ring-slate-500"
           />
           <input
             type="password"
@@ -93,7 +93,7 @@ function LoginPage() {
             autoComplete="current-password"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700"
+            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700 ring-2 ring-slate-200 focus:outline-none focus:ring-slate-500"
           />
           <button
             className="w-full block m-4 px-8 py-4 bg-slate-600 hover:bg-slate-500 text-slate-200 transition-all rounded-xl"

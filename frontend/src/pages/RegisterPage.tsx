@@ -133,7 +133,7 @@ function RegisterPage() {
         className="absolute top-3 left-3 size-10 hover:top-2 hover:left-2 hover:size-12 transition-all"
         onClick={goLandingPage}
       />
-      <h1 className="text-3xl text-gray-600 font-semibold text-center">
+      <h1 className="text-3xl text-gray-600 font-semibold text-center my-4">
         회원가입
       </h1>
       <form onSubmit={(e) => e.preventDefault()}>
@@ -144,7 +144,7 @@ function RegisterPage() {
               placeholder="사용할 ID를 입력해주세요."
               value={id}
               onChange={(e) => setId(e.target.value)}
-              className="flex-1 h-10 rounded-l-xl p-4 text-gray-700 rounded-r-none border-2 border-r-0 focus:outline-none focus:border-gray-400"
+              className="flex-1 h-10 rounded-l-xl p-4 text-gray-700 rounded-r-none border-2 border-r-0 focus:outline-none focus:border-slate-500"
             />
             <button
               className="h-10 px-4 bg-slate-600 text-slate-200 transition-all rounded-r-xl hover:bg-slate-500"
@@ -167,7 +167,7 @@ function RegisterPage() {
             placeholder="사용할 비밀번호를 입력해주세요."
             value={pw}
             onChange={(e) => setPw(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 mb-5 text-gray-700 border-2 focus:outline-none focus:border-gray-400"
+            className="w-full h-10 rounded-xl p-4 mb-5 text-gray-700 border-2 focus:outline-none focus:border-slate-500"
           />
           <input
             type="password"
@@ -175,7 +175,7 @@ function RegisterPage() {
             placeholder="비밀번호를 확인해주세요."
             value={checkPw}
             onChange={(e) => setCheckPw(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 m-1 text-gray-700 border-2 focus:outline-none focus:border-gray-400"
+            className="w-full h-10 rounded-xl p-4 m-1 text-gray-700 border-2 focus:outline-none focus:border-slate-500"
           />
           <p
             className={`self-start px-2 text-sm ${
