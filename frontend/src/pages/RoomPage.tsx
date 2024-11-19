@@ -4,13 +4,15 @@ import {
   FaVideo,
   FaVideoSlash,
 } from "react-icons/fa";
+import { IoChevronBackOutline } from "react-icons/io5";
 import { useDevices } from "@hooks/useDevices";
 import { useSocket } from "@hooks/useSocket";
 import ChatBox from "@components/ChatBox";
 import { useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function RoomPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { roomName }: { roomName: string } = location.state;
   const {
@@ -32,7 +34,11 @@ function RoomPage() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col bg-gradient-to-br from-gray-800 to-gray-900 text-white">
-      <div className="p-4 bg-gray-700 shadow-md">
+      <div className="relative p-4 bg-gray-700 shadow-md">
+        <IoChevronBackOutline
+          className="absolute top-1/2 left-5 -translate-y-1/2 w-12 h-12 p-3 cursor-pointer hover:scale-125 transition-all"
+          onClick={() => navigate("/home")}
+        />
         <h1 className="text-2xl font-semibold text-center">
           채팅방 이름: {roomName}
         </h1>

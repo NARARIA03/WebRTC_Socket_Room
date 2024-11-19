@@ -138,13 +138,13 @@ function RegisterPage() {
       </h1>
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="w-80 flex flex-col justify-center items-center mt-4 mx-auto">
-          <div className="flex w-full items-center m-3">
+          <div className="flex w-full items-center">
             <input
               type="text"
               placeholder="사용할 ID를 입력해주세요."
               value={id}
               onChange={(e) => setId(e.target.value)}
-              className="flex-1 h-10 rounded-l-xl p-4 text-gray-700 border-r-0 rounded-r-none"
+              className="flex-1 h-10 rounded-l-xl p-4 text-gray-700 rounded-r-none border-2 border-r-0 focus:outline-none focus:border-gray-400"
             />
             <button
               className="h-10 px-4 bg-slate-600 text-slate-200 transition-all rounded-r-xl hover:bg-slate-500"
@@ -154,11 +154,11 @@ function RegisterPage() {
             </button>
           </div>
           <p
-            className={`self-start text-sm ${
+            className={`self-start px-2 text-sm mb-2 ${
               isIdNotExist ? "text-green-500" : "text-red-500"
             }`}
           >
-            {idMsg}
+            {idMsg || "\u00A0"}
           </p>
 
           <input
@@ -167,7 +167,7 @@ function RegisterPage() {
             placeholder="사용할 비밀번호를 입력해주세요."
             value={pw}
             onChange={(e) => setPw(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700"
+            className="w-full h-10 rounded-xl p-4 mb-5 text-gray-700 border-2 focus:outline-none focus:border-gray-400"
           />
           <input
             type="password"
@@ -175,14 +175,14 @@ function RegisterPage() {
             placeholder="비밀번호를 확인해주세요."
             value={checkPw}
             onChange={(e) => setCheckPw(e.target.value)}
-            className="w-full h-10 rounded-xl p-4 m-3 text-gray-700"
+            className="w-full h-10 rounded-xl p-4 m-1 text-gray-700 border-2 focus:outline-none focus:border-gray-400"
           />
           <p
-            className={`self-start text-sm ${
+            className={`self-start px-2 text-sm ${
               isPwCheck ? "text-green-500" : "text-red-500"
             }`}
           >
-            {pwMsg}
+            {pwMsg || "\u00A0"}
           </p>
           <button
             className="w-full block m-4 px-8 py-4 rounded-xl bg-slate-600 hover:bg-slate-500 text-slate-200 disabled:bg-gray-400 disabled:hover:bg-gray-400 transition-all"
