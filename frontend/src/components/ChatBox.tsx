@@ -31,9 +31,13 @@ function ChatBox({ chats, submitChat }: Props) {
       <div className="p-4 bg-gray-700 flex justify-between items-center rounded-t-lg">
         <h2 className="text-lg font-semibold text-slate-200">채팅</h2>
       </div>
-      <div className="flex h-[320px] flex-col overflow-y-scroll">
+      <div className="flex h-[320px] flex-col scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-700 scrollbar-track-gray-800 overflow-y-scroll">
         {chats.map(({ userId, text, time }) => (
-          <div className="p-3 space-y-4" ref={scrollRef}>
+          <div
+            className="p-3 space-y-4"
+            ref={scrollRef}
+            key={`${userId}-${time}-${text}`}
+          >
             <div className="items-start ml-3">
               <p className="text-sm text-slate-200">
                 <span className="text-slate-200">{userId}</span> : {text}
