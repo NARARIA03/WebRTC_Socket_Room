@@ -14,7 +14,10 @@ app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] },
+  cors: {
+    origin: "https://assignment3.nararia03.duckdns.org",
+    methods: ["GET", "POST"],
+  },
 });
 app.set("io", io);
 socketHandler(io);
