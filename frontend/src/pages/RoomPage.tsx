@@ -40,7 +40,7 @@ function RoomPage({ id }: Props) {
           onClick={() => navigate("/home")}
         />
         <h1 className="text-2xl font-semibold text-center">
-          채팅방 이름: {roomName}
+          채팅방 이름 : {roomName}
         </h1>
       </div>
 
@@ -55,21 +55,21 @@ function RoomPage({ id }: Props) {
               className="w-full h-auto max-h-[300px] rounded-lg shadow-md object-cover"
             />
             <p className="text-center text-sm mt-2 text-gray-400 truncate">
-              ID: {id} (나)
+              ID : {id} (나)
             </p>
           </div>
         </div>
 
         <div className="bg-gray-800 rounded-lg shadow-md p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {remoteStreams.map(({ peerId, userId, stream }) => (
               <div
                 key={peerId}
-                className="bg-gray-700 rounded-lg p-2 shadow-md"
+                className="bg-gray-700 rounded-lg p-2 shadow-md flex flex-col items-center"
               >
                 <Video stream={stream} />
                 <p className="text-center text-sm mt-2 text-gray-400 truncate">
-                  ID: {userId}
+                  ID : {userId}
                 </p>
               </div>
             ))}
@@ -107,7 +107,7 @@ function Video({ stream }: { stream: MediaStream }) {
       ref={ref}
       autoPlay
       playsInline
-      className="w-full h-auto max-h-[300px] rounded-lg shadow-md object-cover"
+      className="w-full h-auto max-h-[200px] rounded-lg shadow-md object-cover"
     />
   );
 }
