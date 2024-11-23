@@ -83,9 +83,16 @@ module.exports = socketHandler = (io) => {
       rooms.forEach((roomMap, roomName) => {
         if (roomMap.has(socket.id)) {
           roomMap.delete(socket.id);
-          io.to(roomName).emit("user-leave", socket.id);
+          if (roomMap.size === 0) {
+            rooms.delete(roomName);
+            chats.delete(roomName);
+          } else {
+            // 룸에 사용자 남아 있으면 알림
+            io.to(roomName).emit("user-leave", socket.id);
+          }
           console.log("사용자 연결 해제:", socket.id);
-          console.log(roomMap);
+          console.log(rooms);
+          console.log(chats);
         }
       });
     });
