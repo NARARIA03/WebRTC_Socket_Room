@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { deleteLocalStorage, getLocalStorage } from "@utils/localStorage";
 import { deleteAction } from "@apis/user";
 import axios, { isAxiosError } from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { IoMdRefresh } from "react-icons/io";
 
 interface Props {
   id: string;
@@ -68,38 +69,43 @@ function HomePage({ id }: Props) {
     });
   };
 
-  useEffect(() => {
-    const fetchRoomsData = async () => {
-      try {
-        const token = getLocalStorage("jwt");
-        if (!token) {
-          alert("로그아웃 되었습니다");
-          navigate("/");
-          return;
-        }
-
-        const { data } = await axios.get<{
-          msg: string;
-          rooms: RoomInfo[];
-        }>(`${import.meta.env.VITE_API_URL}/chat`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setRoomInfo(data.rooms);
-      } catch (e) {
-        console.error(e);
+  const fetchRoomsData = useCallback(async () => {
+    try {
+      const token = getLocalStorage("jwt");
+      if (!token) {
+        alert("로그아웃 되었습니다");
+        navigate("/");
+        return;
       }
-    };
 
-    fetchRoomsData();
+      const { data } = await axios.get<{
+        msg: string;
+        rooms: RoomInfo[];
+      }>(`${import.meta.env.VITE_API_URL}/chat`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRoomInfo(data.rooms);
+    } catch (e) {
+      console.error(e);
+    }
   }, [navigate]);
+
+  useEffect(() => {
+    fetchRoomsData();
+  }, [fetchRoomsData]);
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-tr from-slate-600 to-slate-500">
-      <div className="bg-slate-200 min-w-96 px-24 py-16 rounded-xl shadow-xl flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-bold text-gray-700 mb-6">채팅방 목록</h1>
-
+      <div className="relative bg-slate-200 min-w-96 px-24 py-16 rounded-xl shadow-xl flex flex-col justify-center items-center">
+        <h1 className="mb-8 text-4xl font-bold text-gray-700">채팅방 목록</h1>
+        <button
+          onClick={fetchRoomsData}
+          className="absolute top-20 right-20 ml-4 p-2 hover:scale-125 transition-all"
+        >
+          <IoMdRefresh className="h-7 w-7 text-slate-600" />
+        </button>
         <div className="flex flex-col gap-4 w-full mb-6">
           {roomInfo.length === 0 ? (
             <div className="text-center text-gray-500">
