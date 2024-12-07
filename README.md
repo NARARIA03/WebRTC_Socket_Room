@@ -1,30 +1,32 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/U_KVj9AE)
-
 # 제출자: 최현성 ( 2022204045 )
 
 ## 1. Deploy
 
-> `AWS Learner Lab` 실행 시 자동으로 `FE`, `BE` 배포가 시작되므로 **별다른 명령어를 사용할 필요는 없습니다.**
+> 추후 개인 서버로 배포를 옮긴 뒤에 수정할 내용입니다!
 
-`FE`: [https://assignment3.nararia03.duckdns.org](https://assignment3.nararia03.duckdns.org)
 
-`BE`: [https://assignment3.nararia03.duckdns.org/api](https://assignment3.nararia03.duckdns.org/api)
+~~> `AWS Learner Lab` 실행 시 자동으로 `FE`, `BE` 배포가 시작되므로 **별다른 명령어를 사용할 필요는 없습니다.**~~
 
-### 1-1. Deploy 과정
+~~`FE`: [https://assignment3.nararia03.duckdns.org](https://assignment3.nararia03.duckdns.org)~~
 
-> FE 배포: `NginX` 5002번 포트
+~~`BE`: [https://assignment3.nararia03.duckdns.org/api](https://assignment3.nararia03.duckdns.org/api)~~
 
-- 서빙 폴더: `/var/www/assignment3/frontend/dist`
+~~### 1-1. Deploy 과정~~
 
-> BE 배포: `PM2` 3002번 포트
+~~> FE 배포: `NginX` 5002번 포트~~
 
-- `pm2 start /var/www/assignment3/backend/app.js`
+~~- 서빙 폴더: `/var/www/assignment3/frontend/dist`~~
 
-> Reverse Proxy: `nginx proxy manager`
+~~> BE 배포: `PM2` 3002번 포트~~
 
-- `https://assignment3.nararia03.duckdns.org` -> `172.31.85.127:5002`
-- `https://assignment3.nararia03.duckdns.org/api` -> `172.31.85.127:3002`
-- `https://assignment3.nararia03.duckdns.org/socket.io` -> `172.31.85.127:3002`
+~~- `pm2 start /var/www/assignment3/backend/app.js`~~
+
+~~> Reverse Proxy: `nginx proxy manager`~~
+
+~~- `https://assignment3.nararia03.duckdns.org` -> `172.31.85.127:5002`~~
+~~- `https://assignment3.nararia03.duckdns.org/api` -> `172.31.85.127:3002`~~
+~~- `https://assignment3.nararia03.duckdns.org/socket.io` -> `172.31.85.127:3002`~~
+
 
 ---
 
