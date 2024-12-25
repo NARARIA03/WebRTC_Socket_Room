@@ -2,6 +2,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const socketHandler = require("./socketHandler");
 const userRouter = require("./routers/userRouter");
@@ -15,7 +16,7 @@ app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://assignment3.nararia03.duckdns.org",
+    origin: process.env.ORIGIN,
     methods: ["GET", "POST"],
   },
 });
