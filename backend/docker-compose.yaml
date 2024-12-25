@@ -1,0 +1,31 @@
+services:
+  webrtc_be:
+    build: .
+    container_name: webrtc_be
+    ports:
+      - "12000:3002"
+    restart: always
+    environment:
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - ORIGIN=${ORIGIN}
+      - MYSQL_HOST=webrtc_db
+      - MYSQL_PORT=3306
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DB=webrtc_proj
+      - MYSQL_LIMIT=10
+    depends_on:
+      - webrtc_db
+
+  webrtc_db:
+    image: mysql
+    container_name: webrtc_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    restart: always
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./v-mysql:/var/lib/mysql
+
+volumes:
+  v-mysql:
