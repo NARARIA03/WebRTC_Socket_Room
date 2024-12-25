@@ -156,7 +156,12 @@ export const useSocket = (
     stream: MediaStream
   ) => {
     // 새 peerConnection 객체 생성
-    const peer = new RTCPeerConnection();
+    const peer = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.services.mozilla.com" },
+        { urls: "stun:stun.l.google.com:19302" },
+      ],
+    });
 
     // 원격 스트림 처리
     // 이 부분 이해 잘 안 됨
@@ -214,7 +219,12 @@ export const useSocket = (
     stream: MediaStream
   ) => {
     // 새 peerConnection 객체 생성
-    const peer = new RTCPeerConnection();
+    const peer = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.services.mozilla.com" },
+        { urls: "stun:stun.l.google.com:19302" },
+      ],
+    });
 
     // 원격 스트림 처리
     // 이 부분 이해 잘 안 됨

@@ -1,89 +1,60 @@
-# 제출자: 최현성 ( 2022204045 )
+# WebSocket, WebRTC를 활용한 3인 화상통화 / 채팅 웹앱 개발
 
-## 1. Deploy
+## 1. 배포
 
-> 추후 개인 서버로 배포를 옮긴 뒤에 수정할 내용입니다!
+배포 주소: https://chattingroom.mooo.com/
 
+### 1-1. 배포 과정
 
-~~> `AWS Learner Lab` 실행 시 자동으로 `FE`, `BE` 배포가 시작되므로 **별다른 명령어를 사용할 필요는 없습니다.**~~
+> FE 배포: `NginX`
 
-~~`FE`: [https://assignment3.nararia03.duckdns.org](https://assignment3.nararia03.duckdns.org)~~
+- 서빙 폴더: `/var/www/webrtc_chattingroom`
 
-~~`BE`: [https://assignment3.nararia03.duckdns.org/api](https://assignment3.nararia03.duckdns.org/api)~~
+> BE 배포: `Docker compose` 12000번 포트 + `NginX`
 
-~~### 1-1. Deploy 과정~~
+NginX 구성 파일
 
-~~> FE 배포: `NginX` 5002번 포트~~
+```shell
+server {
+      server_name chattingroom.mooo.com;
+      root /var/www/webrtc_chattingroom;
+      index index.html;
 
-~~- 서빙 폴더: `/var/www/assignment3/frontend/dist`~~
+      location / {
+        try_files $uri /index.html;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+      }
 
-~~> BE 배포: `PM2` 3002번 포트~~
+      location /socket.io/ {
+        proxy_pass http://127.0.0.1:12000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+      }
 
-~~- `pm2 start /var/www/assignment3/backend/app.js`~~
-
-~~> Reverse Proxy: `nginx proxy manager`~~
-
-~~- `https://assignment3.nararia03.duckdns.org` -> `172.31.85.127:5002`~~
-~~- `https://assignment3.nararia03.duckdns.org/api` -> `172.31.85.127:3002`~~
-~~- `https://assignment3.nararia03.duckdns.org/socket.io` -> `172.31.85.127:3002`~~
-
-
----
-
-## 2. How to start
-
-> `git clone`을 사용한 뒤, `프로젝트 루트`까지 들어왔다고 가정합니다.
-
-> FE 패키지 매니저로 `yarn`을 사용했습니다. 혹시라도 문제가 발생한다면, `yarn`을 사용해주세요.
-> `npm install -g yarn`
-
-### 2-1. 초기 설정
-
-`frontend`, `backend` 각각 패키지를 설치해줍니다. (`yarn`, `npm`)
-
-`frontend` 폴더 내에 `.env` 파일을 만들고, `VITE_API_URL`과 `VITE_SOCKET_URL`을 기입합니다. 로컬 테스트 용도로는 두 값 모두 `http://localhost:3002`를 사용하면 됩니다.
-
-배포 시 `VITE_SOCKET_URL`은 `wss://`로 시작하는 주소를 넣어줬습니다.
-
-`backend` 폴더 내에 `.env` 파일을 만들고, `MySQL` 관련 민감 정보들과 `PRIVATE_KEY`를 기입합니다.
-
-`PRIVATE_KEY`는 `JWT` 생성에 사용되는 비밀 키입니다. 로컬 테스트 용도로는 아무 값이나 넣어도 됩니다.
-
-```bash
-cd frontend
-yarn
-echo "VITE_API_URL=http://localhost:3002" >> .env
-
-cd ../backend
-npm i
-# PRIVATE_KEY, ORIGIN, MYSQL_HOST, MYSQL_PORT,
-# MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DB, MYSQL_LIMIT 환경 변수가 필요합니다.
-cd ..
-```
-
-### 2-2. FE 실행
-
-`frontend` 폴더에서 `yarn dev` 명령어를 사용합니다.
-
-```bash
-cd frontend
-yarn dev
-```
-
-### 2-3. BE 실행
-
-`backend` 폴더에서 `npm start` 명령어를 사용합니다.
-
-```bash
-cd backend
-npm start
+      location /api/ {
+        rewrite ^/api(.*) $1 break;
+        proxy_pass http://127.0.0.1:12000;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+      }
+}
 ```
 
 ---
 
-## 3. Assignment1~3 정리
+## 2. 소개
 
-### 랜딩 페이지
+### 2-1. 랜딩 페이지
 
 <img src="./docs/landing.png" alt="Landing Page" width="800" />
 
@@ -93,7 +64,7 @@ npm start
 
 ---
 
-### 회원가입 페이지
+### 2-2. 회원가입 페이지
 
 <img src="./docs/register.png" alt="Register Page" width="800" />
 
@@ -109,7 +80,7 @@ npm start
 
 ---
 
-### 로그인 페이지
+### 2-3. 로그인 페이지
 
 <img src="./docs/login.png" alt="Login Page" width="800" />
 
@@ -123,7 +94,7 @@ npm start
 
 ---
 
-### 홈 페이지
+### 2-4. 홈 페이지
 
 <div style="width: 800px; display: flex;">
   <img src="./docs/home1.png" alt="Home Page 1" width="400" />
@@ -143,7 +114,7 @@ npm start
 
 ---
 
-### 룸 페이지
+### 2-5. 룸 페이지
 
 <img src="./docs/room.png" alt="Login Page" width="800" />
 
@@ -155,13 +126,13 @@ npm start
 
 ---
 
-## 4. Socket, Web RTC 코드
+## 3. Socket, Web RTC 코드
 
 FE: `/frontend/src/hooks/useSocket.tsx`에 대부분 존재합니다.
 
 BE: `/backend/socketHandler.js`에 모두 존재합니다.
 
-## 5. Use tech stack
+## 4. 사용 기술 스택
 
 **FE**:
 
@@ -189,5 +160,5 @@ BE: `/backend/socketHandler.js`에 모두 존재합니다.
 **Deploy**:
 
 - FE: `NginX`
-- BE: `PM2`
-- Reverse Proxy: `nginx proxy manager`
+- BE: `Docker compose`
+- Reverse Proxy: `nginx proxy manager`, `NginX`
